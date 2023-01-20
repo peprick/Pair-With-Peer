@@ -14,20 +14,20 @@ The system consists of several clients (peers) and a central server. A peer can 
 
 
 ### The following is the step by step procedure of creating this project : 
-  1. **Creating sockets on both server and client side.**
-  2. **Setting up sockets for further communication between server and client.**
-  3. **Building of Handle_Client_Request function and Registering Client on the Server Side.**
-  4. **Making the user interface of the client by which they can make requests to the server.**
-  5. **Building up supporting functions for user interface.**
-  6. **Functions used in User_Interface Function.**
-  7. **Handling Requests from the Client.**
-  8. **Creating functions to handle requests of clients. (On Client Side)**
+  + **Creating sockets on both server and client side.**
+  + **Setting up sockets for further communication between server and client.**
+  + **Building of Handle_Client_Request function and Registering Client on the Server Side.**
+  + **Making the user interface of the client by which they can make requests to the server.**
+  + **Building up supporting functions for user interface.**
+  + **Functions used in User_Interface Function.**
+  + **Handling Requests from the Client.**
+  + **Creating functions to handle requests of clients. (On Client Side)**
     * searchfile(Sock_fd)
     * sharefile_public(Sock_fd)
     * receivefile(Sock_fd)
       * download(Sock_fd , filename)
-    + send_file_list(Sock_fd)
-  9. **Giving response of client request (On Server Side)**
+    * send_file_list(Sock_fd)
+  + **Giving response of client request (On Server Side)**
     * Register_Client(Sock_fd)
     * !Handle_Download_Request(Sock_fd)
     * Handle_List_Request(Sock_fd)
