@@ -642,9 +642,10 @@ void RunClient(){
 
     //start accepting requests
     int tmp_sockfd;
-    struct sockaddr_in tmpaddress; socklen_t addrsize;
+    struct sockaddr_in tmpaddress; socklen_t addrsize = sizeof(tmpaddress);
     while(true){
         std:: cout << "\nhere.." << std:: endl;
+        addrsize = sizeof(tmpaddress);
         if((tmp_sockfd = accept(Client_Listen_Sockfd, (struct sockaddr *)&tmpaddress, &addrsize)) < 0){
             std:: cout << "cannot accept request\n";
             exit(1);

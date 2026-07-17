@@ -139,11 +139,10 @@ bool Handle_Download_Request(int Sock_fd){
     recv(Sock_fd, Filename, datasize, 0);
 
     std::string username = (std::string)Username;
-    std::map<std::string, std::pair<std::string, int>> :: iterator it;
-    it = ClientsList.find(username);
-    it++;
-    while(it->first != username){
-        (it == ClientsList.end() ? it = ClientsList.begin() : it = it);
+    for(auto it = ClientsList.begin(); it != ClientsList.end(); ++it){
+        if(it->first == username){
+            continue;
+        }
 
         Client_Address.sin_family = AF_INET;
         Client_Address.sin_addr.s_addr = inet_addr(it->second.first.c_str());
@@ -155,7 +154,7 @@ bool Handle_Download_Request(int Sock_fd){
         }
         //connect
         if(connect(Temp_Sockfd, (struct sockaddr *)&Client_Address, sizeof(Client_Address)) < 0){
-              it++;
+              close(Temp_Sockfd);
               continue;
         }
             
@@ -185,7 +184,6 @@ bool Handle_Download_Request(int Sock_fd){
         }
     
         close(Temp_Sockfd);
-        it++;
     }
 
     return false;
@@ -326,7 +324,7 @@ void Handle_Client_Request(int Sock_fd, int RequestID){
 void RunServer(){
     int Server_Sockfd, New_Client_Sockfd;
     struct sockaddr_in Server_Address, New_Client_Address;
-    socklen_t addr_size;
+    socklen_t addr_size = sizeof(New_Client_Address);
 
     memset(&Server_Address, 0, sizeof(Server_Address));     //clear Server_Address
 
@@ -336,11 +334,14 @@ void RunServer(){
         exit(1);
     }
 
-    //fill-up Server_Address for binding
-    std::string ipaddr = getip();
+    int reuse_address = 1;
+    setsockopt(Server_Sockfd, SOL_SOCKET, SO_REUSEADDR, &reuse_address, sizeof(reuse_address));
+
+    // Listen on every local interface for portability across macOS and Linux.
+    std::string ipaddr = "0.0.0.0";
     Server_Address.sin_family = AF_INET;
     Server_Address.sin_port = htons(PORT);
-    Server_Address.sin_addr.s_addr = inet_addr(ipaddr.c_str());
+    Server_Address.sin_addr.s_addr = htonl(INADDR_ANY);
 
     //bind
     if(bind(Server_Sockfd, (struct sockaddr *)&Server_Address, sizeof(Server_Address)) < 0){
@@ -356,6 +357,7 @@ void RunServer(){
     std::cout << "Listening to " << ipaddr << ": " << PORT << std::endl;
     //accept requests from clients and make separate threads to handle them
     while(true){
+        addr_size = sizeof(New_Client_Address);
         if((New_Client_Sockfd = accept(Server_Sockfd, (struct sockaddr *)&New_Client_Address, &addr_size)) < 0){
             std::cout << "client connection could not be established\n";
             exit(1);
