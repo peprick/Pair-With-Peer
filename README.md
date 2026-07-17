@@ -2,6 +2,25 @@
 
 The system consists of several clients (peers) and a central server. A peer can join the p2p network by connecting to the server. After entering the network, a peer has to register its username and then it can either share or download a file from other peers. The data being distributed are split into chunks. For each file, the server keeps track of the list of chunks each peer has. Any peer can download files from other peers directly. Moreover, any peer is capable of downloading different chunks of a file simultaneously from different peers.
 
+## Quick start
+
+Requirements: a C++17 compiler and `make` (available by default with Xcode Command Line Tools on macOS, or `build-essential` on Debian/Ubuntu).
+
+```sh
+make setup
+make
+```
+
+Start the tracker on the machine that will host it:
+
+```sh
+./server
+```
+
+Run `./client` in a separate working directory for every peer. Each client needs a unique listening port. During local testing, use `127.0.0.1` as both the client and server address; for peers on a LAN, use the reachable LAN IP address of the server and each peer.
+
+Place files that a peer should offer for public download in `shared/public/`. Private shares are read from `shared/private/`. Downloaded files are saved in the client's current working directory.
+
 
 ---
 

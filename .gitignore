@@ -1,0 +1,6 @@
+server
+client
+shared/public/*
+!shared/public/.gitkeep
+shared/private/*
+!shared/private/.gitkeep
