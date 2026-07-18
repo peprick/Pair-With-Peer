@@ -1,18 +1,36 @@
 CXX ?= c++
-CXXFLAGS ?= -std=c++17 -Wall -Wextra -Wpedantic -pthread
+PWP_CPPFLAGS := -Iinclude
+PWP_CXXFLAGS := -std=c++17 -Wall -Wextra -Wpedantic -Wconversion -pthread
 
-.PHONY: all setup clean
+BIN_DIR := bin
+BUILD_DIR := build
+TRACKER := $(BIN_DIR)/pwp-tracker
+PEER := $(BIN_DIR)/pwp-peer
 
-all: server client
+.PHONY: all clean format test test-e2e
 
-server: server.cpp server_handler.cpp
-	$(CXX) $(CXXFLAGS) server.cpp -o $@
+all: $(TRACKER) $(PEER)
 
-client: client.cpp client_handler.cpp
-	$(CXX) $(CXXFLAGS) client.cpp -o $@
+$(TRACKER): src/tracker.cpp include/pwp/protocol.hpp | $(BIN_DIR)
+	$(CXX) $(PWP_CPPFLAGS) $(CPPFLAGS) $(PWP_CXXFLAGS) $(CXXFLAGS) $< -o $@
 
-setup:
-	mkdir -p shared/public shared/private
+$(PEER): src/peer.cpp include/pwp/protocol.hpp include/pwp/files.hpp | $(BIN_DIR)
+	$(CXX) $(PWP_CPPFLAGS) $(CPPFLAGS) $(PWP_CXXFLAGS) $(CXXFLAGS) $< -o $@
+
+$(BUILD_DIR)/protocol-tests: tests/protocol_tests.cpp include/pwp/protocol.hpp include/pwp/files.hpp | $(BUILD_DIR)
+	$(CXX) $(PWP_CPPFLAGS) $(CPPFLAGS) $(PWP_CXXFLAGS) $(CXXFLAGS) $< -o $@
+
+$(BIN_DIR) $(BUILD_DIR):
+	mkdir -p $@
+
+test: $(BUILD_DIR)/protocol-tests
+	./$(BUILD_DIR)/protocol-tests
+
+test-e2e: all
+	bash tests/e2e.sh
+
+format:
+	clang-format -i src/*.cpp include/pwp/*.hpp tests/*.cpp
 
 clean:
-	rm -f server client
+	rm -rf $(BIN_DIR) $(BUILD_DIR)
