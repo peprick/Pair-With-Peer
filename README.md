@@ -161,7 +161,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for the contribution workflow and [docs/P
 
 Pair with Peer is an educational LAN-oriented project, not a production file-sharing service. It currently has no authentication, encryption, content integrity hashes, NAT traversal, resumable transfers, or multi-source chunk downloading. Run it only with peers you trust and on networks where direct peer connections are appropriate.
 
-The implementation does validate message sizes and file names, caps files at 1 GiB, applies socket timeouts, writes downloads through unique temporary files, prevents silent overwrites, isolates peer data by directory, and keeps direct sends opt-in. Those safeguards improve reliability; they do not turn the protocol into a secure transport.
+The implementation does validate message sizes and file names, caps files at 1 GiB, applies socket-timeouts, writes downloads through unique temporary files, prevents silent overwrites, isolates peer data by directory, and keeps direct sends opt-in. Those safeguards improve reliability; they do not turn the protocol into a secure transport.
 
 ## Roadmap
 
