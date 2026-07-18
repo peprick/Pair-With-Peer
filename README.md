@@ -137,7 +137,7 @@ For a LAN demo, bind each peer to its LAN address. If a peer listens on `0.0.0.0
 
 ## Development
 
-The default Make targets cover the common workflow:
+The default Make targets cover the common work-flow:
 
 ```sh
 make              # build bin/pwp-tracker and bin/pwp-peer
